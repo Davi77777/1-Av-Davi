@@ -1,5 +1,8 @@
 package Exercicio02
 
+//Maria Luíza do Carmo de Santana- 01357229
+//Davi de Mendonça Vasconcelos Alves Coutinho - 01383910
+//Arllom de Fraga Dutra - 01358091
 class Exercicio02 {
     fun main(args: Array<String>) {
 
