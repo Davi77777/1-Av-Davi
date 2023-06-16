@@ -2,6 +2,7 @@ package Exercicio02;
 
 import java.util.Stack;
 
+//Maria Luíza do Carmo de Santana- 01357229
 public class AnalisadorSintatico {
     public static boolean analisar(String expressao) {
         Stack<String> pilha = new Stack<>();
