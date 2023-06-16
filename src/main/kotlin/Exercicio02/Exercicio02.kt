@@ -1,3 +1,5 @@
+package Exercicio02
+
 class Exercicio02 {
     fun main(args: Array<String>) {
 
@@ -40,7 +42,7 @@ class Exercicio02 {
         // Passo 1: Encontra os não-terminais que são anuláveis
         do {
             oldNullableCount = nullableNonTerminals.size
-            glc.productions.filter { it.right.contains(Companion.EPSILON) }
+            glc.productions.filter { it.right.contains(EPSILON) }
                 .forEach { nullableNonTerminals.add(it.left) }
 
             glc.productions.filter { production ->
@@ -51,14 +53,14 @@ class Exercicio02 {
         } while (oldNullableCount != newNullableCount)
 
         // Passo 2: Elimina as produções vazias
-        glc.productions.filter { it.right.contains(Companion.EPSILON) }
+        glc.productions.filter { it.right.contains(EPSILON) }
             .forEach { production ->
                 val nonNullableProductions = glc.productions.filterNot { it == production }
                 val newProductions = mutableSetOf(listOf(production.left))
                 nullableNonTerminals.forEach { nullableNonTerminal ->
                     nonNullableProductions.forEach { nonNullableProduction ->
                         val right = nonNullableProduction.right.map {
-                            if (it == nullableNonTerminal) Companion.EPSILON else it
+                            if (it == nullableNonTerminal) EPSILON else it
                         }
                         newProductions.add(listOf(production.left) + right)
                     }

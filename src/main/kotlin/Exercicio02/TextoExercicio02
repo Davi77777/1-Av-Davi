@@ -1,0 +1,86 @@
+2° Avaliação - Compiladores
+Maria Luíza do Carmo de Santana- 01357229
+Davi de Mendonça Vasconcelos Alves Coutinho - 01383910
+Arllom de Fraga Dutra - 01358091
+
+2°)  Descreva quais as vantagens da Forma Backus Naur (BNF) para compiladores?
+Uma das principais vantagens da BNF é a sua clareza e legibilidade. A notação é projetada de forma a ser facilmente compreendida por humanos, permitindo que projetistas de compiladores e desenvolvedores compreendam e comuniquem as regras da linguagem de maneira concisa e precisa. As regras gramaticais definidas pela BNF são facilmente identificáveis, com suas produções, símbolos terminais e não terminais, facilitando a compreensão da estrutura da linguagem. A Forma Backus Naur (BNF) em resumo é uma notação poderosa e altamente benéfica para a construção de compiladores. Sua clareza, precisão, facilidade de implementação, reutilização e suporte de ferramentas tornam-na essencial no desenvolvimento de linguagens de programação e sistemas de processamento de linguagens. A BNF proporciona uma base sólida para a definição e compreensão da sintaxe, contribuindo para o avanço e inovação no campo da computação.
+
+3°) Utilizando o recurso de uma inteligência artificial de sua escolha, tente compor as regras e comandos necessários para montar um analisador sintático ascendente.
+Para compor um analisador sintático ascendente precisamos seguir os seguintes passos:
+Definir a gramática: Comece definindo a gramática da linguagem que você deseja analisar. A gramática deve ser expressa em uma forma livre de contexto, geralmente usando a notação BNF ou uma variante semelhante. A gramática especifica as regras de produção da linguagem, definindo como as expressões são estruturadas.
+Construir as tabelas de análise: Com base na gramática, é necessário construir as tabelas de análise LR(1) ou LR(k). Essas tabelas são usadas pelo analisador sintático para tomar decisões sobre ações a serem tomadas em cada etapa de análise. As tabelas de análise contêm informações sobre deslocamentos (shifts), reduções (reductions) e ações de aceitação.
+Implementar o analisador sintático: Utilizando as tabelas de análise, você pode implementar o analisador sintático. O analisador irá percorrer a entrada (geralmente uma sequência de tokens gerados pelo analisador léxico) e tomar decisões com base nas ações definidas nas tabelas de análise. O analisador pode usar uma pilha (stack) para acompanhar o estado atual e realizar as ações apropriadas, como deslocamento, redução ou aceitação.
+Lidar com conflitos: Durante a construção das tabelas de análise, podem ocorrer conflitos, como conflitos shift/reduce ou reduce/reduce. Esses conflitos devem ser resolvidos para garantir um analisador sintático correto e sem ambiguidades. Isso geralmente envolve a modificação da gramática ou a definição de regras de precedência e associatividade.
+Integrar com o analisador léxico: O analisador sintático deve se integrar ao analisador léxico para obter os tokens da entrada. O analisador léxico converte o código-fonte em uma sequência de tokens, que são então passados para o analisador sintático para análise da estrutura gramatical.
+Essas são apenas etapas gerais para a construção de um analisador sintático ascendente. A implementação específica pode variar dependendo da ferramenta ou técnica utilizada. Aqui está um exemplo de analisador sintático ascendente em Phyton:
+# Definir a gramática
+grammar = {
+    'expressions': [
+        ['expression'],
+        ['expressions', '+', 'expression'],
+        ['expressions', '-', 'expression']
+    ],
+    'expression': [
+        ['number'],
+        ['(', 'expression', ')']
+    ],
+    'number': [
+        ['0'], ['1'], ['2'], ['3'], ['4'],
+        ['5'], ['6'], ['7'], ['8'], ['9']
+    ]
+}
+
+# Construir as tabelas de análise (ações e deslocamentos)
+actions = {
+    0: {'(': 's2', 'number': 's3'},
+    2: {'(': 's2', 'number': 's3'},
+    3: {'+': 's4', '-': 's5', ')': 'r2', '$': 'acc'},
+    6: {'$': 'r1'},
+    # ... mapeamento das ações do analisador
+}
+gotos = {
+    0: {'expressions': 1},
+    2: {'expression': 6},
+    # ... mapeamento dos estados de deslocamento
+}
+
+# Implementar a pilha e a análise
+def parse(input_string):
+    stack = [0]
+    tokens = input_string.split()
+    lookahead = tokens[0]
+
+    while True:
+        state = stack[-1]
+
+        if lookahead in actions[state]:
+            action = actions[state][lookahead]
+
+            if action[0] == 's':
+                stack.append(lookahead)
+                stack.append(int(action[1:]))
+                tokens = tokens[1:]
+                lookahead = tokens[0]
+            elif action[0] == 'r':
+                production = grammar[action[1:]]
+                for _ in range(len(production)):
+                    stack.pop()
+                    stack.pop()
+
+                nonterminal = production[0][0]
+                stack.append(nonterminal)
+
+                goto_state = gotos[stack[-2]][nonterminal]
+                stack.append(goto_state)
+            elif action == 'acc':
+                print("Análise concluída com sucesso!")
+                return
+        else:
+            print("Erro de análise sintática.")
+            return
+# Exemplo de uso
+parse('1 + 2')
+
+4°) Descreve quais as funções de uma analisador semântico em compiladores:
+O analisador semântico é uma das etapas do processo de compilação de um compilador, responsável por garantir que as declarações e frases do código-fonte estejam semanticamente corretas, verificando o significado das instruções e checando itens como erros de tipo, variáveis não declaradas e outros problemas que podem afetar o significado do programa. Entre as funções específicas do analisador semântico estão a verificação de tipos, checagem de escopo, resolução de identificadores, validação de expressões e aplicação de regras semânticas específicas da linguagem. Ele analisa e valida as expressões aritméticas, lógicas e relacionais presentes no código-fonte, verificando a coerência e a validade dessas expressões. Somado a isso, o analisador semântico também pode aplicar regras e restrições semânticas específicas da linguagem, como limites de tamanho, padrões de nomenclatura e restrições de acesso e segurança. Cada compilador pode ter requisitos e características específicas, mas o analisador semântico sempre desempenha um papel fundamental na garantia da correção e coerência do código-fonte.
